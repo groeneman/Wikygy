@@ -1,4 +1,5 @@
 from django.db import models
+from wikilink.etc.linkfinder import getWikiLinks
 
 # Create your models here.
 class Source(models.Model):
@@ -14,4 +15,9 @@ class Source(models.Model):
 		return self.content == ""
 	
 	def getWPLinks(self):
-		return None
+		return getWikiLinks(self.content)
+	
+	def getWPTitles(self):
+		return [l[0] for l in self.getWPLinks()]
+	
+	getWPLinks.short_description="Relevant Wikipedia Links"

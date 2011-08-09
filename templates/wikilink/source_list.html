@@ -1,0 +1,13 @@
+{% block content %}
+    <h2>Sources</h2>
+    <ul>
+        {% for source in object_list %}
+            <li>{{ source.title }}</li>
+				<ul>
+					{% for link in source.getWPTitles %}
+					<li><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
+					{% endfor %}
+				</ul>
+        {% endfor %}
+    </ul>
+{% endblock %}
