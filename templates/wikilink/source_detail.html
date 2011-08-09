@@ -1,0 +1,11 @@
+{% block content %}
+    <h1>{{object.title}}</h1>
+	<div class="author"><strong>By {{object.author}}</strong></div>
+	<em>{{object.url}}</em>
+			<ul>
+				{% for link in object.getWPTitles %}
+				<li><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
+				{% endfor %}
+			</ul>
+			<a href="{% url source_list %}">View All</a>
+{% endblock %}

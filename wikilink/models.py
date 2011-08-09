@@ -9,15 +9,15 @@ class Source(models.Model):
 	content = models.TextField(blank=True)
 	
 	def __unicode__(self):
-		return self.url
+		return self.title
 	
 	def has_content(self):
 		return self.content == ""
 	
 	def getWPLinks(self):
-		return getWikiLinks(self.content)
+		return getWikiLinks(self.url,self.content)
 	
 	def getWPTitles(self):
-		return [l[0] for l in self.getWPLinks()]
+		return [l[1] for l in self.getWPLinks()]
 	
 	getWPLinks.short_description="Relevant Wikipedia Links"

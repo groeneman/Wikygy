@@ -36,6 +36,12 @@ def getTextFromURL(url):
 	else:
 		return text
 
+def getTopics(resultobj):
+	if hasattr(resultobj, "entities"):
+		return [(item['_type'], item['name'], item['relevance']) for item in resultobj.entities]
+	else:
+		return []
+
 def getCalaisTags(url,limit=10):
 	global cc
 
@@ -83,7 +89,8 @@ def getFirstNWordsQuery(text,url=None,numwords=100):
 	words = cleanText(words)
 	return " | ".join(words)
 
-def getCalaisQuery(text,url=None,numresults=10):
+def getCalaisQuery(url,numresults=10):
+	assert url is not None
 	global t
 	tags = getCalaisTags(url)
 	return tagsToQueryString(tags)
@@ -99,12 +106,29 @@ def runQuery(query,numresults=10,verbose=False):
 		print "Error: {0}".format(e)
 		error = True
 	else:
-		titles = results.getMatchesByAttr("title")[:numresults]
-		ids = results.getMatchIDs()[:numresults]
-	return zip(titles,ids)
+		return results.getResults("title")
 
-def getWikiLinks(text,numresults=10):
+def getWikiLinks(url,text=None,numresults=10):
 	q1 = getTFIDFQuery(text)
-	results = runQuery(q1,numresults)
+	results1 = runQuery(q1,numresults)
+	
+	try:
+		q2 = getCalaisQuery(url)
+	except ValueError:
+		results2 = []
+	else:
+		results2 = runQuery(q2,numresults)
+	
+	results = []
+	
+	while len(results)< numresults:
+		if (len(results) %2 == 0 or len(results2) ==0) and len(results1)>0:
+			results.append(results1.pop(0))
+		elif (len(results) %2 == 1 or len(results1) == 0) and len(results2)>0:
+			results.append(results2.pop(0))
+		else:
+			#Nothing left to add
+			break
+	
 	return results
 	
