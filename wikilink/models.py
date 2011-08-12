@@ -10,6 +10,10 @@ class WPArticle(models.Model):
 	
 	def __unicode__(self):
 		return self.title
+		
+	def url(self):
+		underscored = self.title.replace(" ","_")
+		return "http://en.wikipedia.org/wiki/{0}".format(underscored)
 
 # Create your models here.
 class Source(models.Model):
@@ -56,6 +60,7 @@ class RSSFeed(models.Model):
 	name = models.CharField(max_length=200,verbose_name="Name",blank=True)
 	url = models.URLField(verbose_name="Feed URL")
 	citations = models.ManyToManyField(Source,editable=False,blank=True)
+	lastUpdate = models.DateTimeField(editable=False)
 
 	def __unicode__(self):
 		return self.name
@@ -70,7 +75,7 @@ class UserProfile(models.Model):
 	citationWatchlist = models.ManyToManyField(Source,verbose_name="Citation Watchlist",blank=True,related_name="watchers")
 	
 	def __unicode__(self):
-		return "Profile for {0}".format(self.user.username)
+		return self.user.get_full_name()
 
 def create_user_profile(sender, **kwargs):
 	if kwargs['created'] and sender == User:
