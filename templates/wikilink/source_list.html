@@ -1,13 +1,25 @@
-{% block content %}
+{% extends "base.html" %}
+
+{% block pagetitle %}
+	Work Queue
+{% endblock %}
+
+{% block main %}
     <h2>Sources</h2>
     <ul>
         {% for source in object_list %}
-            <li><a href="{% url source_detail pk=source.id %}">{{ source.title }}</li>
+            <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p>
 				<ul>
-					{% for link in source.getWPTitles %}
-					<li><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
+					{% for link in source.wikiarticles.all %}
+					<li class ="linktitle"><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
 					{% endfor %}
 				</ul>
-        {% endfor %}
+        {% endfor %}</li>
     </ul>
-{% endblock %}
+
+	{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+	
+	{% include "wikilink/new_source_from_url.html" %}
+
+
+{% endblock main %}

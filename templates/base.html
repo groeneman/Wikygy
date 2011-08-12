@@ -1,0 +1,41 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}Wikygy{% endblock title %}</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="{{ STATIC_URL }}style/style.css" media="screen"/>
+		<script src="{{ STATIC_PREFIX }}scripts/jquery.js" type="text/javascript"></script>
+		<script src="{{ STATIC_PREFIX }}scripts/custom.js" type="text/javascript"></script>
+		
+	</head>
+	<body>
+		<div id="centeralign">
+		<div id="header">{% block header %}<img src="{{ STATIC_URL }}graphics/logo.png" alt="Wikygy &alpha;"/>{% endblock header %}</div>
+		<div id="container">
+			<div id="nav">
+			<ul>
+				<li><a href="{% url mycitations %}">My Citations</a></li>
+				<li><a href="{% url source_list %}">Work Queue</a></li>
+			</ul>
+			<div id="pagetitle">{% block pagetitle %}Page Title{% endblock %}</div>
+			</div>
+		<div id="sidebar">
+			{% block sidebar %}<p>Wikygy is a tool that gives Wikipedia editors quick access to citations and relevant wikipedia articles.</p><p>Wikygy is super-mega-ultra-alpha software.  Don't expect anything to work right.</p><p id="jqtest"></p><p><a href="">And this is a test link</a>
+				{% if user.is_authenticated %}
+					<p>Logged in as {{ user.username }}. <a href="{% url logout %}">Logout</a></p>
+				{% else %}
+					<p><a href="login">Log in</a></p>
+				{% endif %}
+				
+			{% endblock sidebar %}
+		</div>
+		<div id="main"><p class="message">{% block messages %}{% endblock %}</p>{% block main %}Main content goes here{% endblock main %}</div>
+		<div id="footer">
+			Wikygy is hosted at the <a href="http://cs.carleton.edu">Department of Computer Science</a>, <a href="http://www.carleton.edu">Carleton College</a>, Northfield, Minnesota, USA. <a href="acknowledgements.html">Acknowledgements</a>
+		</div>
+		</div>
+		</div>
+	</body>
+</html>

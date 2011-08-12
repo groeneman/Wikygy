@@ -1,10 +1,33 @@
-{% block content %}
-    <h1>{{object.title}}</h1>
-	<div class="author"><strong>By {{object.author}}</strong></div>
+{% extends "base.html" %}
+
+{% block pagetitle %}
+	Source Detail
+{% endblock %}
+
+{% block messages %}
+	{% if message %}
+	{% if undoform %}
+		<form action="" class="toolboxform" method="post" name="undo">{% csrf_token %}{{ undoform }}</form>
+	{% endif %}
+	{{ message|safe }}{% if undoform %}  <a href="javascript:document.undo.submit()">Undo</a>{% endif %}{% endif %}
+{% endblock %}
+
+{% block main %}
+    <h1>{{object.title|safe}}</h1>
+	{% if author %}
+	<div class="author">By {{object.author}}</div>
+	{% endif %}
 	<em>{{object.url}}</em>
 			<ul>
-				{% for link in object.getWPTitles %}
-				<li><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
+				{% for link in object.wikiarticles.all %}
+					<li><a class="wikilink" href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a> &ndash; <span class ="toolbox">
+						<form class="toolboxform" name="irrelevant{{link.pageid}}/" action="{% url remove_irrelevant %}" method="POST">
+							{% csrf_token %}
+							<input type="hidden" name="wikipageid" value="{{link.pageid}}">
+							<input type="hidden" name="sourceid" value="{{object.id}}">
+							<input type="hidden" name="undo" value="False">
+						</form>
+							(<a href="javascript:document.irrelevant{{link.pageid}}.submit()" alt="This Wikipedia page isn't relevant to the source">irrelevant</a>, I cited this)</span></li>
 				{% endfor %}
 			</ul>
 			<a href="{% url source_list %}">View All</a>

@@ -1,11 +1,12 @@
 import urllib
-import extMainText
+from extMainText import extMainText
 import tfidf
 import calais
 import sphinx_inter
 from sphinx_vars import *
 from operator import itemgetter
 from itertools import chain
+import re
 
 calaisAPI = "pqwxutrgjk8zhk5geutnhpyj"
 cc = calais.Calais(calaisAPI)
@@ -13,10 +14,9 @@ t = tfidf.TfIdf(corpus_filename="/Accounts/groenemm/summer/wikygy/wikilink/etc/d
 				stopword_filename="/Accounts/groenemm/summer/wikygy/wikilink/etc/data/stopwords.txt")
 sc = sphinx_inter.SphinxClient("dmusican41812",rankingmode=SPH_RANK_BM25,fieldweights={"title":4, "body":1})
 
-def getText(url):
-	page = urllib.urlopen(url).read()
-	page = unicode(page, "utf-8")
-	text = extMainText(page).strip()
+def getText(pageText):
+	pageText = unicode(pageText, "utf-8")
+	text = extMainText(pageText).strip()
 	return text
 
 def removeSphinxReservedChars(word):
@@ -26,15 +26,25 @@ def removeSphinxReservedChars(word):
 
 def getTextFromURL(url):
 	try:
-		text = getText(url)
+		title,text = getTextAndTitleFromURL(url)
 	except IOError,e:
 		print e
-		return None
+		return None,None
 	except UnicodeDecodeError,e:
 		print e
-		return None
+		return None,None
 	else:
-		return text
+		return title,text
+
+def getTextAndTitleFromURL(url):
+	page = urllib.urlopen(url).read()
+	text = getText(page)
+	title = re.findall("<title>(.*)</title>",page)
+	if len(title) > 0:
+		title = title[0]
+	else:
+		title = None
+	return title,text
 
 def getTopics(resultobj):
 	if hasattr(resultobj, "entities"):
@@ -49,14 +59,6 @@ def getCalaisTags(url,limit=10):
 	topics = getTopics(result)
 	topics.sort(reverse=True,key=itemgetter(2))
 	return topics[:limit]
-
-def reformMultiwordTopic(t):
-	words = t.split(" ")
-	if len(words)>1:
-		#return "\"" + t + "\""
-		return " | ".join(words)
-	else:
-		return t
 
 def tagsToQueryString(taglist):
 	global t
@@ -105,6 +107,7 @@ def runQuery(query,numresults=10,verbose=False):
 	except sphinx_inter.SphinxAPIException,e:
 		print "Error: {0}".format(e)
 		error = True
+		return []
 	else:
 		return results.getResults("title")
 

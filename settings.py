@@ -145,3 +145,7 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'wikilink.UserProfile'
+LOGIN_URL = '/link/login'
+LOGIN_REDIRECT_URL = '/link/'

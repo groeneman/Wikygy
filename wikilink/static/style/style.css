@@ -1,0 +1,143 @@
+/* @override http://localhost:8000/static/style/style.css */
+
+html,body{
+	background-color: #3b3b3b;
+	color: black;
+	margin: 0px;
+	padding: 0px;
+	font: 12px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+#centeralign{
+	margin: 0 auto;
+	width: 902px;
+	z-index: -4;
+}
+
+
+#container{
+	background-color: #b6b6b6;
+	z-index: -1;
+	border: 1px solid #fffeff;
+	margin-top: 50px;
+}
+
+div#nav ul li {
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	display: inline;
+	margin-right: 15px;
+}
+
+div#nav{
+	color: #fcd450;
+	background-color: #002776;
+	padding-top: 12px;
+	padding-bottom: 2px;
+	display: block;
+	height: 22px;
+}
+
+div#nav > ul {
+	margin: 0;
+	margin-top: 7px;
+	padding-left: 10px;
+	float: left;
+}
+
+#pagetitle{
+	float: right;
+	margin-right: 30px;
+	letter-spacing: 1px;
+	font: 20px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+div#nav a {
+	text-decoration: none;
+	color: #fcd450;
+}
+
+div#nav a:hover {
+	color: white;
+}
+
+#sidebar {
+	background-color: #b6b6b6;
+	float: left;
+	width: 140px;
+	padding: 5px;
+}
+
+#sidebar p
+{
+	font: italic 12px "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+#sidebar a
+{
+	color: #1c3388;
+}
+
+#main {
+	background-color: whitesmoke;
+	float: right;
+	width: 740px;
+	padding: 5px;
+	min-height: 700px;
+}
+
+#header{
+	top: 0;
+	position: absolute;
+	padding-left: 5px;
+	margin-top: 5px;
+}
+
+#footer {
+	background-color: #f7dc64;
+	font: 12px "Lucida Grande", Lucida, Verdana, sans-serif;
+	padding: 5px;
+	clear: both;
+	text-align: center;
+}
+
+#footer a
+{
+	color: #1c3388;
+}
+
+h1 {
+	font: normal normal 20px/20px Georgia, "Times New Roman", Times, serif;
+	margin-bottom: 4px;
+}
+
+li
+{
+	list-style-type: square;
+	margin-bottom: 3px;
+}
+
+a {
+	color: olive;
+}
+
+a.wikilink{
+	font-size: larger;
+	color: #1c3388;
+}
+
+a:hover{
+	text-decoration: none;
+}
+
+form.toolboxform {
+	display: none;
+}
+
+p.author {
+	font-weight: bold;
+}
+
+p.message {
+	font-weight: bold;
+	color: maroon;
+}
