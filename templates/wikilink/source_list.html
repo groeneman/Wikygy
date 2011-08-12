@@ -11,7 +11,7 @@
             <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p>
 				<ul>
 					{% for link in source.wikiarticles.all %}
-					<li class ="linktitle"><a href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a></li>
+					<li class ="linktitle"><a href="{{ link.url }}">{{ link }}</a></li>
 					{% endfor %}
 				</ul>
         {% endfor %}</li>

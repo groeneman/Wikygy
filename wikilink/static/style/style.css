@@ -137,7 +137,12 @@ p.author {
 	font-weight: bold;
 }
 
-p.message {
-	font-weight: bold;
+div#message > p {
+		font-weight: bold;
 	color: maroon;
+
+}
+
+p.sourceURL {
+	font-style: italic;
 }

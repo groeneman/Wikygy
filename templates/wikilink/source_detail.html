@@ -4,30 +4,49 @@
 	Source Detail
 {% endblock %}
 
-{% block messages %}
+{% block message %}
 	{% if message %}
 	{% if undoform %}
-		<form action="" class="toolboxform" method="post" name="undo">{% csrf_token %}{{ undoform }}</form>
+		<form action="{{undoaction}}" class="toolboxform" method="post" name="undo">{% csrf_token %}{{ undoform }}</form>
 	{% endif %}
-	{{ message|safe }}{% if undoform %}  <a href="javascript:document.undo.submit()">Undo</a>{% endif %}{% endif %}
+	<p>{{ message|safe }}{% if undoform %} <a href="javascript:document.undo.submit()">Undo</a></p>{% endif %}{% endif %}
 {% endblock %}
 
 {% block main %}
-    <h1>{{object.title|safe}}</h1>
+    <h1>{{source.title|safe}}</h1>
 	{% if author %}
-	<div class="author">By {{object.author}}</div>
+	<div class="author">By {{source.author}}</div>
 	{% endif %}
-	<em>{{object.url}}</em>
-			<ul>
-				{% for link in object.wikiarticles.all %}
-					<li><a class="wikilink" href="http://en.wikipedia.org/wiki/{{link}}">{{ link }}</a> &ndash; <span class ="toolbox">
-						<form class="toolboxform" name="irrelevant{{link.pageid}}/" action="{% url remove_irrelevant %}" method="POST">
+	<p class="sourceURL">{{source.url}}</p>
+	<p class="metainfo">Added to Wikygy {{ source.dateAdded|timesince }} ago by {{ source.creator }}</p>
+			<ul>{% for link in articles %}
+					<li>
+						{% if link.irr_cited_form %}
+						<form class="toolboxform" name="irrelevant{{link.meta.pageid}}" action="{% url source_detail_action pk=source.id action='irrelevant' %}" method="POST">
 							{% csrf_token %}
-							<input type="hidden" name="wikipageid" value="{{link.pageid}}">
-							<input type="hidden" name="sourceid" value="{{object.id}}">
-							<input type="hidden" name="undo" value="False">
+							{{ link.irr_cited_form }}
 						</form>
-							(<a href="javascript:document.irrelevant{{link.pageid}}.submit()" alt="This Wikipedia page isn't relevant to the source">irrelevant</a>, I cited this)</span></li>
+						<form class="toolboxform" name="cited{{link.meta.pageid}}" action="{% url source_detail_action pk=source.id action='cite' %}" method="POST">
+							{% csrf_token %}
+							{{ link.irr_cited_form }}
+						</form>
+							{% if link.citation_undo %}
+								<form class="toolboxform" name="undocitation{{link.meta.pageid}}" action="{% url source_detail_action pk=source.id action='cite' %}" method="POST">
+									{% csrf_token %}
+									{{ link.citation_undo }}
+								</form>
+							{% endif %}
+						{% endif %}
+						<a class="wikilink" href="{{link.meta.url }}">{{ link.meta }}</a>
+							<span class ="toolbox">
+								{% if not link.citation %}
+									{% if link.irr_cited_form %}
+										&ndash; (<a href="javascript:document.irrelevant{{link.meta.pageid}}.submit()">irrelevant</a>, <a href="javascript:document.cited{{link.meta.pageid}}.submit()">I cited this</a>)
+									{% endif %}
+								{% else %}
+									 &ndash; (Cited by {{ link.citation.citer }} on {{ link.citation.dateCited }} {% if link.citation_undo %}<a href="javascript:document.undocitation{{link.meta.pageid}}.submit()">Undo</a>{% endif %})
+								{% endif %}
+								</span></li>
 				{% endfor %}
 			</ul>
 			<a href="{% url source_list %}">View All</a>

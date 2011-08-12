@@ -15,15 +15,31 @@ class WPArticle(models.Model):
 		underscored = self.title.replace(" ","_")
 		return "http://en.wikipedia.org/wiki/{0}".format(underscored)
 
+	
+
+class UserProfile(models.Model):
+	user = models.OneToOneField(User)
+	about = models.TextField(verbose_name="About Me",blank=True)
+
+	def __unicode__(self):
+		return self.user.get_full_name()
+
+
 # Create your models here.
 class Source(models.Model):
 	title = models.CharField(verbose_name="Title",max_length=300)
-	author = models.CharField(verbose_name="Author",max_length=70,blank=True)
-	dateAdded = models.DateTimeField(auto_now_add=True)
+	citationAuthor = models.CharField(verbose_name="Citation Author",max_length=70,blank=True)
 	url = models.URLField(verbose_name="Source URL",verify_exists=True,max_length=500)
 	content = models.TextField(blank=True)
 	wikiarticles = models.ManyToManyField(WPArticle,blank=True,editable=False,related_name="relatedsources")
-	cited = models.ManyToManyField(WPArticle,blank=True,editable=False,related_name="citedsources")
+	
+	dateAdded = models.DateTimeField(auto_now_add=True)
+	creator = models.ForeignKey(UserProfile,verbose_name="Creator",related_name="mysources",blank=True)
+	
+	citations = models.ManyToManyField(WPArticle,editable=False,related_name="citedsources",through='Citation')
+	watchers = models.ManyToManyField(UserProfile,verbose_name="Citation Watchlist",blank=True,related_name="watchlist")
+	
+	
 	
 	def __unicode__(self):
 		return self.title
@@ -39,6 +55,11 @@ class Source(models.Model):
 	
 	def getWPTitles(self):
 		return [l[2] for l in self.getWPLinks()]
+		
+	def allCitedArticles(self):
+		citations = self.citations.all()
+		citedarticles = [c for c in citations]
+		return citedarticles
 	
 	def save(self,*args,**kwargs):
 		super(Source,self).save(*args,**kwargs)
@@ -61,22 +82,20 @@ class RSSFeed(models.Model):
 	url = models.URLField(verbose_name="Feed URL")
 	citations = models.ManyToManyField(Source,editable=False,blank=True)
 	lastUpdate = models.DateTimeField(editable=False)
-
+	watchers = models.ManyToManyField(UserProfile,verbose_name="Watchers",blank=True,related_name="feeds")
+	
 	def __unicode__(self):
 		return self.name
         
-
-
-class UserProfile(models.Model):
-	user = models.OneToOneField(User)
-	about = models.TextField(verbose_name="About Me",blank=True)
-	rssfeeds = models.ManyToManyField(RSSFeed,verbose_name="RSS Feeds",blank=True)
-	myCitations = models.ManyToManyField(Source,verbose_name="Citations",related_name="owners",blank=True)
-	citationWatchlist = models.ManyToManyField(Source,verbose_name="Citation Watchlist",blank=True,related_name="watchers")
+class Citation(models.Model):
+	dateCited = models.DateTimeField(auto_now=True)
+	source = models.ForeignKey(Source)
+	article = models.ForeignKey(WPArticle)
+	citer = models.ForeignKey(UserProfile)
 	
 	def __unicode__(self):
-		return self.user.get_full_name()
-
+	 	return "{0} + {1} + {2}".format(self.source,self.article,self.citer)
+		
 def create_user_profile(sender, **kwargs):
 	if kwargs['created'] and sender == User:
 		u = UserProfile(user=kwargs['instance'])

@@ -12,14 +12,14 @@
 	Login
 {% endblock %}
 
-{% if form.errors %}
-{% block messages %}
-	Your username and password didn't match. Please try again.
+{% block message %}
+	{% if form.errors %}
+		<p>Your username and password didn't match. Please try again.</p>
+	{% endif %}
 {% endblock %}
-{% endif %}
 
 {% block main %}
-
+<h2>Please log into Wikygy to view this page</h2>
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 {% csrf_token %}
 <table>

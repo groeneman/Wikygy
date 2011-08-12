@@ -26,12 +26,12 @@
 				{% if user.is_authenticated %}
 					<p>Logged in as {{ user.username }}. <a href="{% url logout %}">Logout</a></p>
 				{% else %}
-					<p><a href="login">Log in</a></p>
+					<p><a href="{% url login %}">Log in</a></p>
 				{% endif %}
 				
 			{% endblock sidebar %}
 		</div>
-		<div id="main"><p class="message">{% block messages %}{% endblock %}</p>{% block main %}Main content goes here{% endblock main %}</div>
+		<div id="main"><div id="message">{% block message %}{% endblock %}</div>{% block main %}Main content goes here{% endblock main %}</div>
 		<div id="footer">
 			Wikygy is hosted at the <a href="http://cs.carleton.edu">Department of Computer Science</a>, <a href="http://www.carleton.edu">Carleton College</a>, Northfield, Minnesota, USA. <a href="acknowledgements.html">Acknowledgements</a>
 		</div>
