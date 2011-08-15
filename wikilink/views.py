@@ -9,7 +9,7 @@ from django.views.generic import ListView,DetailView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from collections import namedtuple
-
+import feedparser
 # Create your views here.
 
 class SourceListView(ListView):
@@ -156,4 +156,6 @@ def new_rss(request):
 		form = URLForm(request.POST)
 		if form.is_valid():
 			feedurl= form.cleaned_data['url']
-			
+			d = feedparser.parse(feedurl)
+			title = d.feed.title
+			link = d.feed.link
