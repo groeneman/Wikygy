@@ -16,8 +16,9 @@
 		<div id="container">
 			<div id="nav">
 			<ul>
-				<li><a href="{% url mycitations %}">My Citations</a></li>
-				<li><a href="{% url source_list %}">Work Queue</a></li>
+				<li><a href="{% url workbench %}">Workbench</a></li>
+				<li><a href="{% url source_list %}">All Sources</a></li>
+				<li><a href="{% url uncited %}">Uncited Sources</a></li>
 			</ul>
 			<div id="pagetitle">{% block pagetitle %}Page Title{% endblock %}</div>
 			</div>

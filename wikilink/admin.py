@@ -2,7 +2,7 @@ from wikilink.models import Source,WPArticle,RSSFeed,UserProfile,Citation
 from django.contrib import admin
 
 class SourceAdmin(admin.ModelAdmin):
-	list_display = ['title','citationAuthor','getWPLinks']
+	list_display = ['title','url','getWPLinks']
 	#exclude = ('wikiarticles',)
 
 admin.site.register(Source,SourceAdmin)

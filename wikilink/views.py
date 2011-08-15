@@ -14,8 +14,7 @@ from collections import namedtuple
 
 class SourceListView(ListView):
 	# See https://docs.djangoproject.com/en/dev/topics/class-based-views/#adding-extra-context
-	model = Source
-	
+	model = Source	
 	def get_context_data(self,**kwargs):
 		context = super(ListView,self).get_context_data(**kwargs)
 		context['form'] = URLForm()
@@ -101,58 +100,21 @@ def source_detail(request,pk,action=None):
 	return render_to_response('wikilink/source_detail.html',{'source':source,'articles':article_containers,'message':message,'undoform':undoform},\
 								context_instance=RequestContext(request))
 	
-	
 @login_required
-def mycitations(request):
+def workbench(request):
 	u = request.user
-	mysources = u.get_profile().watchlist.all()
 	
+	myWatchlist = u.get_profile().watchlist.all()
+	myCitations = u.get_profile().my_citations.all()
+	myCitations = set([citation.source for citation in myCitations])
+	mySources = u.get_profile().my_sources.all()
+	myRSSFeeds = u.get_profile().feeds.all()
+		
 	form = URLForm()
 	action = reverse('new_url')
 	
-	return render_to_response('wikilink/source_list.html',{'object_list':mysources,'form':form,'action':action},context_instance=RequestContext(request))
-
-# def irrelevant(request):
-# 	if request.method == 'POST':
-# 		form = SourceArticleLinkForm(request.POST)
-# 		if form.is_valid():
-# 		else:
-# 			raise Http404
-# 	else:
-# 		return HttpResponseRedirect(reverse('source_list'))
-
-# @login_required
-# def cited(request):
-# 	if request.method == 'POST':
-# 		form = SourceArticleLinkForm(request.POST)
-# 		if form.is_valid():
-# 			articleid = form.cleaned_data['articleid']
-# 			sourceid = form.cleaned_data['sourceid']
-# 			undo = form.cleaned_data['undo']
-# 			
-# 			s = get_object_or_404(Source,pk=sourceid)
-# 			wp = get_object_or_404(WPArticle,pk=articleid)
-# 			u = request.user.get_profile()
-# 			
-# 			try:
-# 				c = Citation.objects.get(source=s,article=wp,citer=u)
-# 			except Citation.DoesNotExist:
-# 				c = Citation(source=s,article=wp,citer=u)
-# 				c.save()
-# 			
-# 			if not undo:
-# 				c.save()
-# 				message = "Source marked as cited on Wikipedia page <em>{0}</em> by {1}.".format(wp,u)
-# 				undoform = SourceArticleLinkForm({'articleid':articleid,'sourceid':sourceid,'undo':True})
-# 				return render_to_response('wikilink/source_detail.html',{'source': s,'message':message,'undoaction':reverse('mark_cited'),'undoform':undoform},context_instance=RequestContext(request))
-# 			else:
-# 				Citation.objects.get(source=s,article=wp,citer=u).delete()
-# 				return HttpResponseRedirect(reverse('source_detail',args=[s.id]))
-# 		else:
-# 			raise Http404
-# 	else:
-# 		return HttpResponseRedirect(reverse('source_list'))
-
+	return render_to_response('wikilink/workbench.html',\
+		{'myWatchlist':myWatchlist,'mySources':mySources,'myCitations':myCitations,'myRSSFeeds':myRSSFeeds,'form':form,'action':action},context_instance=RequestContext(request))
 
 def new_source(request):
 	if request.method == 'POST': # If the form has been submitted...
@@ -187,3 +149,11 @@ def new_source_from_url(request):
 	
 	actionurl = reverse('new_url')
 	return render_to_response('wikilink/newsource.html',{'form':form,'action':actionurl,'message':message,},context_instance=RequestContext(request))
+	
+def new_rss(request):
+	message = None
+	if request.method == 'POST':
+		form = URLForm(request.POST)
+		if form.is_valid():
+			feedurl= form.cleaned_data['url']
+			

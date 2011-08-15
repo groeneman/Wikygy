@@ -8,7 +8,7 @@ class SourceForm(ModelForm):
 
 class URLForm(forms.Form):
 	url = forms.URLField(label='URL',widget=forms.TextInput(attrs={'size':100}))
-	
+
 class SourceArticleLinkForm(forms.Form):
 	sourceid = forms.IntegerField(widget=forms.HiddenInput)
 	articleid = forms.IntegerField(widget=forms.HiddenInput)

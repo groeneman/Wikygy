@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}
+	{{user.first_name}}'s Workbench
+{% endblock %}
+
+{% block main %}
+    <h2 class="sectionheader">My Watchlist ({{watchlist|length}})</h2>
+	<ul>
+        {% for source in myWatchlist %}
+            <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
+		{% endfor %}
+    </ul>
+    
+    <h2 class="sectionheader">My Sources ({{mySources|length}})</h2>
+	<ul>{% for source in mySources %}
+			<li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
+		{% endfor %}
+	</ul>
+		
+    <h2 class="sectionheader">My Citations ({{myCitations|length}})</h2>
+	<ul>{% for source in myCitations %}
+        	<li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
+		{% endfor %}</ul>
+
+    <h2 class="sectionheader">My RSS Feeds ({{myRSSFeeds|length}})</h2>
+	<ul>{% for source in myRSSFeeds %}
+            <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
+		{% endfor %}</ul>
+	
+	{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+	{% include "wikilink/new_source_from_url.html" %}
+
+
+{% endblock main %}
