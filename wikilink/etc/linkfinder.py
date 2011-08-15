@@ -112,6 +112,7 @@ def runQuery(query,numresults=10,verbose=False):
 		return results.getResults("title")
 
 def getWikiLinks(url,text=None,numresults=10):
+	
 	q1 = getTFIDFQuery(text)
 	results1 = runQuery(q1,numresults)
 	
@@ -121,6 +122,13 @@ def getWikiLinks(url,text=None,numresults=10):
 		results2 = []
 	else:
 		results2 = runQuery(q2,numresults)
+	
+
+	print "**************"
+	print "TFIDF: ",q1
+	#print "Calais: ",q2
+	print "URL: ",url
+	print "Extracted Text: ", text
 	
 	results = []
 	

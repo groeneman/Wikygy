@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 
 {% block pagetitle %}
-	Work Queue
+	{{ heading }}
 {% endblock %}
 
 {% block main %}
-    <h2>Sources</h2>
+    <h2>{{ heading }}</h2>
+	
+	{% if feed %}
+		<form action="{% url update_rss %}" method='POST' name='feedupdate' class='toolboxform'>
+			{% csrf_token %}{{feed.updateForm}}
+		</form>
+		<p><em>Updated {{ feed.lastUpdate|timesince }} ago. </em><a href="javascript:document.feedupdate.submit()">Update</a></p>
+	{% endif %}
+	
     <ul>
         {% for source in object_list %}
-            <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p>
+            <li class="source"><p><a href="{% url source_detail pk=source.id %}" class="wikilink">{{ source.title|safe }}</a></p>
 				<ul>
 					{% for link in source.wikiarticles.all %}
 					<li class ="linktitle"><a href="{{ link.url }}">{{ link }}</a></li>

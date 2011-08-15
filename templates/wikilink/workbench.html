@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <h2 class="sectionheader">My Watchlist ({{watchlist|length}})</h2>
+    <h2 class="sectionheader">My Watchlist ({{myWatchlist|length}})</h2>
 	<ul>
         {% for source in myWatchlist %}
             <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
@@ -24,8 +24,8 @@
 		{% endfor %}</ul>
 
     <h2 class="sectionheader">My RSS Feeds ({{myRSSFeeds|length}})</h2>
-	<ul>{% for source in myRSSFeeds %}
-            <li class="source"><p><a href="{% url source_detail pk=source.id %}">{{ source.title|safe }}</a></p></li>
+	<ul>{% for feed in myRSSFeeds %}
+            <li class="source"><p><a href="{% url rss_detail rssid=feed.id %}">{{ feed.name }}</a></p></li>
 		{% endfor %}</ul>
 	
 	{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
