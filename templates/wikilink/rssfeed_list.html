@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}
+	RSS Feeds
+{% endblock %}
+
+{% block main %}
+    <h2>RSS Feeds</h2>
+
+	{% if is_paginated %}
+		{% include "wikilink/pagination_controls.html" %}
+	{% endif %}
+	
+    <ul>
+        {% for feed in object_list %}
+            <li class="source"><p><a href="{% url rss_detail rssid=feed.id %}" class="biglink">{{ feed.name|safe }}</a></p>
+        {% endfor %}</li>
+    </ul>
+
+	{% if is_paginated %}
+		{% include "wikilink/pagination_controls.html" %}
+	{% endif %}
+
+	{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+	
+	{% include "wikilink/new_source_from_url.html" %}
+
+
+{% endblock main %}

@@ -1,0 +1,7 @@
+{% extends "wikilink/source_list.html" %}
+
+{% block source_details %}
+	<li class="source"><p><a href="{% url source_detail pk=obj.source.id %}" class="biglink">{{ obj.source.title|safe }}</a><br />
+		Cited on page <a href="{{obj.article.url}}">{{obj.article}}</a> by <a href="{% url user_profile username=obj.citer.user.username %}">{{ obj.citer }}</a> on {{obj.dateCited}} </p>
+	</li>
+{% endblock %}

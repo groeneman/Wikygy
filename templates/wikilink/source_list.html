@@ -11,23 +11,33 @@
 		<form action="{% url update_rss %}" method='POST' name='feedupdate' class='toolboxform'>
 			{% csrf_token %}{{feed.updateForm}}
 		</form>
-		<p><em>Updated {{ feed.lastUpdate|timesince }} ago. </em><a href="javascript:document.feedupdate.submit()">Update</a></p>
+		<form action="{% url watch_rss %}" method='POST' name='addtomyrss' class='toolboxform'>
+			{% csrf_token %}{{feed.addToMy}}
+		</form>
+		
+		<p class="toolboxlinks"><em>Updated {{ feed.lastUpdate|timesince }} ago.</em> ( <a href="javascript:document.feedupdate.submit()">Update</a> &#124;
+				
+					{% if user.is_authenticated %}
+						<a href="javascript:document.addtomyrss.submit()">{% if feed in user.get_profile.feeds.all %}Remove From My RSS Feeds{% else %}Add To My RSS Feeds{% endif %}</a> )</p>
+					{% endif %}
 	{% endif %}
 	
+	{% include "wikilink/pagination_controls.html" %}
+	
     <ul>
-        {% for source in object_list %}
-            <li class="source"><p><a href="{% url source_detail pk=source.id %}" class="wikilink">{{ source.title|safe }}</a></p>
-				<ul>
-					{% for link in source.wikiarticles.all %}
-					<li class ="linktitle"><a href="{{ link.url }}">{{ link }}</a></li>
-					{% endfor %}
-				</ul>
+        {% for obj in object_list %}
+			{% block source_details %}
+				<li class="source"><p><a href="{% url source_detail pk=obj.id %}" class="biglink">{{ source.title|safe }}</a></p>
+					<ul>
+						{% for link in obj.wikiarticles.all %}
+						<li class ="linktitle"><a href="{{ link.url }}">{{ link }}</a></li>
+						{% endfor %}
+					</ul>
+			{% endblock %}
         {% endfor %}</li>
     </ul>
 
-	{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
-	
+	{% include "wikilink/pagination_controls.html" %}
 	{% include "wikilink/new_source_from_url.html" %}
-
 
 {% endblock main %}

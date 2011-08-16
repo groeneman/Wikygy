@@ -75,6 +75,16 @@ class Source(models.Model):
 				self.wikiarticles.add(article)
 			else:
 				self.wikiarticles.add(article)
+				
+	def update(self):
+		title,text = getTextFromURL(self.url)
+		if text is not None and title is not None:
+			self.title=title
+			self.content=text
+			self.save()
+		else:
+			message = "Error obtaining text from URL.  Please use the manual text entry form or try a different URL."
+		
 		
 	getWPLinks.short_description="Relevant Wikipedia Links"
 
@@ -90,16 +100,14 @@ class RSSFeed(models.Model):
 		return self.name
 	
 	def update(self):
-		self.lastUpdate = datetime.datetime.now()
-		self.save()
-		
 		parsed = feedparser.parse(self.url)
 		self.name = unicode(parsed.feed.title)
 		self.link = parsed.feed.link
-		
+		self.lastUpdate = datetime.datetime.now()
+		self.save()
 		rssUser = User.objects.get(username="RSS").get_profile()
 		
-		for s in parsed.entries:
+		for s in parsed.entries[:10]:
 			title = unicode(s.title).encode("UTF-8")
 			published = datetime.datetime(*s.updated_parsed[:6])
 			url = s.link
@@ -113,7 +121,7 @@ class RSSFeed(models.Model):
 				self.sources.add(source)
 			else:
 				self.sources.add(source)
-				
+				print source.title ,"already exists in DB."
         
 class Citation(models.Model):
 	dateCited = models.DateTimeField(auto_now=True)
@@ -134,10 +142,8 @@ def create_user_profile(sender, **kwargs):
 post_save.connect(create_user_profile, sender=User)
 
 def update_rss_feed(sender,**kwargs):
-	if sender == RSSFeed:
+	if sender == RSSFeed and kwargs['created']:
 		feed = kwargs['instance']
-		if (datetime.datetime.now() - feed.lastUpdate) > datetime.timedelta(seconds=10): 
-			print "Signal triggered"
-			feed.update()
+		feed.update()
 
 post_save.connect(update_rss_feed, sender=RSSFeed)

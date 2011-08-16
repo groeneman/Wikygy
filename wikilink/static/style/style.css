@@ -120,7 +120,7 @@ a {
 	color: olive;
 }
 
-a.wikilink{
+a.biglink{
 	font-size: larger;
 	color: #1c3388;
 }
@@ -137,12 +137,25 @@ p.author {
 	font-weight: bold;
 }
 
-div#message > p {
-		font-weight: bold;
+ul.messages > li {
+	font-weight: bold;
 	color: maroon;
-
+	list-style-type: none;
 }
+
+ul.messages {
+	padding-left: 0;
+}
+
+.toolboxlinks a {
+	color: maroon;
+}
+
 
 p.sourceURL {
 	font-style: italic;
+}
+
+.pagination-controls {
+	float: right;
 }

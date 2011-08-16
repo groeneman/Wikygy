@@ -9,6 +9,8 @@
 		<script src="{{ STATIC_PREFIX }}scripts/jquery.js" type="text/javascript"></script>
 		<script src="{{ STATIC_PREFIX }}scripts/custom.js" type="text/javascript"></script>
 		
+		{% block extraforms %}{% endblock %}
+		
 	</head>
 	<body>
 		<div id="centeralign">
@@ -19,6 +21,9 @@
 				<li><a href="{% url workbench %}">Workbench</a></li>
 				<li><a href="{% url source_list %}">All Sources</a></li>
 				<li><a href="{% url uncited 'uncited' %}">Uncited Sources</a></li>
+				<li><a href="{% url recently_cited %}">Recently Cited</a></li>
+				
+				<li><a href="{% url feeds %}">Feeds</a></li>
 			</ul>
 			<div id="pagetitle">{% block pagetitle %}Page Title{% endblock %}</div>
 			</div>
@@ -32,7 +37,15 @@
 				
 			{% endblock sidebar %}
 		</div>
-		<div id="main"><div id="message">{% block message %}{% endblock %}</div>{% block main %}Main content goes here{% endblock main %}</div>
+		<div id="main">
+			{% if messages %}
+				<ul class="messages">
+				{% for message in messages %}
+				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+		{% block main %}Main content goes here{% endblock main %}</div>
 		<div id="footer">
 			Wikygy is hosted at the <a href="http://cs.carleton.edu">Department of Computer Science</a>, <a href="http://www.carleton.edu">Carleton College</a>, Northfield, Minnesota, USA. <a href="acknowledgements.html">Acknowledgements</a>
 		</div>
