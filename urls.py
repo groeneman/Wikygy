@@ -6,5 +6,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+	(r'^flat/', include('django.contrib.flatpages.urls')),
     (r'^link/', include('wikilink.urls')),
 )

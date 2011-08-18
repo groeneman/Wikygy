@@ -1,1 +1,13 @@
-Freakin' 404!
+{% extends "base.html" %}
+
+{% block title %}
+	{{block.super}}: 404 Error
+{% endblock %}
+
+{% block pagetitle %}
+	404 Error
+{% endblock %}
+
+{% block main %}
+	<h2>Oh noes!  A 404 Object Not Found Error has occurred.</h2>
+{% endblock %}

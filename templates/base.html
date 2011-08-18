@@ -47,7 +47,7 @@
 			{% endif %}
 		{% block main %}Main content goes here{% endblock main %}</div>
 		<div id="footer">
-			Wikygy is hosted at the <a href="http://cs.carleton.edu">Department of Computer Science</a>, <a href="http://www.carleton.edu">Carleton College</a>, Northfield, Minnesota, USA. <a href="acknowledgements.html">Acknowledgements</a>
+			Wikygy is hosted at the <a href="http://cs.carleton.edu">Department of Computer Science</a>, <a href="http://www.carleton.edu">Carleton College</a>, Northfield, Minnesota, USA. <a href="{% url django.contrib.flatpages.views.flatpage url="acknowledgements/" %}">Acknowledgements</a>
 		</div>
 		</div>
 		</div>

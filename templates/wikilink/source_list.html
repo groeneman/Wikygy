@@ -27,7 +27,7 @@
     <ul>
         {% for obj in object_list %}
 			{% block source_details %}
-				<li class="source"><p><a href="{% url source_detail pk=obj.id %}" class="biglink">{{ source.title|safe }}</a></p>
+				<li class="source"><p><a href="{% url source_detail pk=obj.id %}" class="biglink">{{ obj.title|safe }}</a></p>
 					<ul>
 						{% for link in obj.wikiarticles.all %}
 						<li class ="linktitle"><a href="{{ link.url }}">{{ link }}</a></li>
