@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from collections import namedtuple
-import feedparser
+from wikilink.etc import feedparser
 from django.db.models import Count
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib import messages

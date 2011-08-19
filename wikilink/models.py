@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from wikilink.etc.linkfinder import getTextFromURL
-import feedparser
+from wikilink.etc import feedparser
 import datetime
 
 class WPArticle(models.Model):

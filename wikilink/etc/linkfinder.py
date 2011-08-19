@@ -6,13 +6,15 @@ import sphinx_inter
 from sphinx_vars import *
 from operator import itemgetter
 from itertools import chain
+from settings import STATIC_ROOT
+import os
 import re
 
 calaisAPI = "pqwxutrgjk8zhk5geutnhpyj"
 cc = calais.Calais(calaisAPI)
-t = tfidf.TfIdf(corpus_filename="/Accounts/groenemm/summer/wikygy/wikilink/etc/data/reformattedfreqlist.txt",\
-				stopword_filename="/Accounts/groenemm/summer/wikygy/wikilink/etc/data/stopwords.txt")
-sc = sphinx_inter.SphinxClient("dmusican41812",rankingmode=SPH_RANK_BM25,fieldweights={"title":4, "body":1})
+t = tfidf.TfIdf(corpus_filename=os.path.join("/var/www/wikygy/wikilink/static/data/reformattedfreqlist.txt"),\
+				stopword_filename=os.path.join(STATIC_ROOT,"/var/www/wikygy/wikilink/static/data/stopwords.txt"))
+sc = sphinx_inter.SphinxClient("localhost",rankingmode=SPH_RANK_BM25,fieldweights={"title":4, "body":1})
 
 def getText(pageText):
 	pageText = unicode(pageText, "utf-8")
